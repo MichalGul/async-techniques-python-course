@@ -10,13 +10,13 @@ def main():
     print(colorama.Fore.WHITE + "App started.", flush=True)
 
     data = []
-
+    con = threading.Condition()
     threads = [
-        threading.Thread(target=generate_data, args=(20, data), daemon=True),
-        threading.Thread(target=generate_data, args=(20, data), daemon=True),
+        threading.Thread(target=generate_data_event, args=(1, data, con)),
+        threading.Thread(target=generate_data_event, args=(2, data, con), daemon=True),
         threading.Thread(target=process_data, args=(40, data), daemon=True),
     ]
-    abort_thread = threading.Thread(target=check_cancel, daemon=True)
+    abort_thread = threading.Thread(target=check_cancel,args=(con,), daemon=True)
     abort_thread.start()
 
     [t.start() for t in threads]
@@ -31,23 +31,65 @@ def main():
     print(colorama.Fore.WHITE + f"App exiting, total time: {dt.total_seconds():,.2f} sec.", flush=True)
 
 
-def check_cancel():
+def check_cancel(con):
     print(colorama.Fore.RED + "Press enter to cancel...", flush=True)
     input()
 
 
+def check_cancel_condition(con):
+    print(colorama.Fore.RED + "Press enter to cancel...", flush=True)
+    input()
+    while True:
+        text = input("type in enter")
+        if text == "":
+            con.acquire()
+            con.notify()
+            print("Notified thread")
+            con.release()
+        else:
+            print("Pressed sth else")
 def generate_data(num: int, data: list):
-    for idx in range(1, num + 1):
-        item = idx * idx
+        while True:
+            item = random.randrange(1, 10000)
+            data.append((item, datetime.datetime.now()))
+
+            print(colorama.Fore.YELLOW + f" -- generated item {item}", flush=True)
+            time.sleep(0.02)
+
+
+def generate_data_condition(num: int, data: list, condition_obj):
+    condition_obj.acquire()
+    # exit_flag = threading.Event()
+    # with condition_obj:
+    # while not exit_flag.wait(timeout=0.02):
+    while True:
+        item = random.randrange(1, 10000)
         data.append((item, datetime.datetime.now()))
+        print(colorama.Fore.RED + f" -- generated item {item}", flush=True)
+        condition_obj.wait(1)
 
-        print(colorama.Fore.YELLOW + f" -- generated item {idx}", flush=True)
-        time.sleep(random.random() + .5)
+    condition_obj.release()
 
+def generate_data_event(num: int, data: list, condition_obj):
+    # exit_flag = threading.Event()
+    # while not exit_flag.wait(timeout=0.02):
+
+    while True:
+        if num==1:
+            item = random.randrange(1,2)
+        else:
+            item = random.randrange(2,3)
+
+        data.append((item, datetime.datetime.now()))
+        f = open(f"demofile{num}.txt", "a")
+        f.write(f'{str(item)} \n')
+        f.close()
+        print(colorama.Fore.RED + f" -- generated item {item}", flush=True)
+        time.sleep(5)
 
 def process_data(num: int, data: list):
     processed = 0
-    while processed < num:
+    while True:
         item = None
 
         if data:
@@ -63,7 +105,7 @@ def process_data(num: int, data: list):
 
         print(colorama.Fore.CYAN +
               f" +++ Processed value {value} after {dt.total_seconds():,.2f} sec.", flush=True)
-        time.sleep(.5)
+        time.sleep(0.02)
 
 
 if __name__ == '__main__':
