@@ -12,11 +12,11 @@ def main():
     data = []
     con = threading.Condition()
     threads = [
-        threading.Thread(target=generate_data_event, args=(1, data, con)),
-        threading.Thread(target=generate_data_event, args=(2, data, con), daemon=True),
+        threading.Thread(target=generate_data, args=(1, data), daemon=True),
+        threading.Thread(target=generate_data, args=(2, data), daemon=True),
         threading.Thread(target=process_data, args=(40, data), daemon=True),
     ]
-    abort_thread = threading.Thread(target=check_cancel,args=(con,), daemon=True)
+    abort_thread = threading.Thread(target=check_cancel, daemon=True)
     abort_thread.start()
 
     [t.start() for t in threads]
@@ -31,7 +31,7 @@ def main():
     print(colorama.Fore.WHITE + f"App exiting, total time: {dt.total_seconds():,.2f} sec.", flush=True)
 
 
-def check_cancel(con):
+def check_cancel():
     print(colorama.Fore.RED + "Press enter to cancel...", flush=True)
     input()
 

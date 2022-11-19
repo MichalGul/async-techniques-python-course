@@ -4,7 +4,7 @@ import threading
 
 def main():
     threads = [
-        threading.Thread(target=greeter, args=("Michael", 10), daemon=True),
+        threading.Thread(target=greeter, args=("Michael", 10), daemon=True), # kill thread when main process ends. otherwhise thread will be processing in background
         threading.Thread(target=greeter, args=("Sarah", 5), daemon=True),
         threading.Thread(target=greeter, args=("Zoe", 2), daemon=True),
         threading.Thread(target=greeter, args=("Mark", 11), daemon=True),
