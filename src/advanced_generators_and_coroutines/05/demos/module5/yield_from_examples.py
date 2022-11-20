@@ -1,4 +1,4 @@
-from collections import Iterable
+from collections.abc import Iterable
 
 
 def delegating_without_yield():
@@ -22,3 +22,10 @@ def flatten(items, ignore_types=(str, bytes)):
             yield from flatten(x)
         else:
             yield x
+
+for i in delegating_with_yield():
+    print(i)
+
+print(list(chain('ABC', [1,2,3])))
+
+print(list(flatten(["D","u", ["p", ["a", "smierdzi"]], 'strasznie'])))

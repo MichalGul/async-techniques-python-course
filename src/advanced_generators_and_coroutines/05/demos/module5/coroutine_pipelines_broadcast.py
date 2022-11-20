@@ -1,4 +1,4 @@
-from module4 import coroutine
+from coroutine_decorator import coroutine
 
 
 @coroutine
@@ -30,5 +30,16 @@ def coprint():
     while True:
         line = yield
         print(f'-->{line}\n')
+
+# Example usage
+printer = coprint()
+
+filter_1 = filter_by_pattern('python', printer)
+filter_2 = filter_by_pattern('favicon', printer)
+filter_3 = filter_by_pattern('C89', printer)
+
+broadcaster = broadcast([filter_1, filter_2, filter_3])
+
+iterate_file("test.txt", broadcaster)
 
 

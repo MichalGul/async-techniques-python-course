@@ -1,4 +1,4 @@
-from module4 import coroutine
+from coroutine_decorator import coroutine
 
 
 @coroutine

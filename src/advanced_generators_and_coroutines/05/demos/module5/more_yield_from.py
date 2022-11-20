@@ -18,6 +18,7 @@ def delegating_gen():
     print(f'**> I am the delegating gen, I dont do much here!')
     try:
         yield from subgen()
+        # This delegating generator never new aobut Genkidama exception becouse caller got it
     except ValueError:
         print('** I got a Value Error')
 
@@ -35,3 +36,6 @@ def subgen():
     except ValueError:
         print('HA! I got you! Get my Genkidama caller!')
         raise GenkidamaException('Take that!')
+
+
+caller()

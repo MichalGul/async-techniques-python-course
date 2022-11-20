@@ -1,4 +1,4 @@
-from module4 import coroutine
+from coroutine_decorator import coroutine
 
 
 @coroutine
@@ -33,3 +33,11 @@ def square_list():
     return new_list
 
 
+def get_data(coroutine, iterable):
+    try:
+        coroutine.send(iterable)
+    except StopIteration as e:
+        print(e.value)
+
+
+get_data(filter_first_list(double_first_list(square_list())), [0,1,2,3])

@@ -1,7 +1,7 @@
 from numpy import random, mean
 from collections import namedtuple
 
-from module4 import coroutine
+from coroutine_decorator import coroutine
 
 
 @coroutine
@@ -35,12 +35,14 @@ def main(size):
     print(f'Real average: {mean(magic_values)}')
     try:
         for value in magic_values:
+            print(f"Sended value: {value}")
             averager.send(value)
             if value == 1:
                 averager.throw(ValueError)
             if value == 3:
                 averager.close()
-        next(averager)
+        # next(averager)
+        averager.send(None)
     except StopIteration as exc:
         returned_value = exc.value
         print(f'Final result: {returned_value}')
@@ -49,4 +51,4 @@ def main(size):
 
 
 if __name__ == '__main__':
-    main(40)
+    main(10)

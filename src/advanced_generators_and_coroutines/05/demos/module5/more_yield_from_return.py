@@ -12,7 +12,7 @@ def delegating_gen():
     try:
         magic_value = yield from subgen()
     except StopIteration as e:
-        print(f'Delegating generator print: {e.value}')
+        print(f'Delegating generator print: {e.value}') # this will not be called yield from handles stopIteration
     else:
         print(f'Delegating generator final print:{magic_value}')
         return 'Goodbye'
@@ -22,3 +22,5 @@ def subgen():
     yield 1
     yield 2
     return 'Hello'
+
+caller()

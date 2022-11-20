@@ -1,6 +1,6 @@
 from collections import namedtuple
 from numpy import random
-from module4.coroutine_decorator import coroutine
+from coroutine_decorator import coroutine
 
 
 @coroutine
@@ -39,3 +39,20 @@ def pipeline(number):
     squared = (i**2 for i in data)
     negated = (-i for i in squared)
     return generate_with_negated_and_data(negated=negated, data=data)
+
+
+averager = averager_with_result()
+
+print(averager.send(2))
+
+print(averager.send(5))
+print(averager.send(1))
+
+print(averager.send(0))
+try:
+    print(averager.send(None))
+except StopIteration as e:
+    print(e)
+
+for i in pipeline(20):
+    print(i)

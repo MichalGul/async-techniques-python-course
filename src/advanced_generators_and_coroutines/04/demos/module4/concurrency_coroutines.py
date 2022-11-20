@@ -1,7 +1,7 @@
 from threading import Thread
 from time import sleep
 
-from module4.coroutine_decorator import coroutine
+from coroutine_decorator import coroutine
 
 
 @coroutine
@@ -22,6 +22,7 @@ def run_coroutine(coro):
 mycoro = my_slow_coroutine()
 thread = Thread(target=run_coroutine, args=(mycoro, ))
 thread.start()
+
 mycoro.close()
 thread.join()
 print('Thread done!')

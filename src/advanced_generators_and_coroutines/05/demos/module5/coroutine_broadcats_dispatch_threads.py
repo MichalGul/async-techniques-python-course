@@ -6,7 +6,7 @@ from threading import Thread
 
 import numpy as np
 
-from module4 import coroutine
+from coroutine_decorator import coroutine
 
 
 def run_target(queue, target):

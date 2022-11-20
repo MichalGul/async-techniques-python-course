@@ -3,7 +3,7 @@ from collections import namedtuple
 from datetime import datetime
 import numpy as np
 
-from module4 import coroutine
+from coroutine_decorator import coroutine
 
 
 def coprint(msg):
