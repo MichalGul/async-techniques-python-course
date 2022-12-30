@@ -23,6 +23,7 @@ def main():
 
     while any([t.is_alive() for t in threads]):
         [t.join(.001) for t in threads]
+        print(colorama.Fore.WHITE + "quick alive check")
         if not abort_thread.is_alive():
             print("Cancelling on your request!", flush=True)
             break
@@ -34,6 +35,8 @@ def main():
 def check_cancel():
     print(colorama.Fore.RED + "Press enter to cancel...", flush=True)
     input()
+    time.sleep(5)
+    print('Waited 5 sec')
 
 
 def check_cancel_condition(con):

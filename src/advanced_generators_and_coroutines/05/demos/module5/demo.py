@@ -27,7 +27,7 @@ import queue
 import random
 
 DEFAULT_NUMBER_OF_TAXIS = 5
-DEFAULT_END_TIME = 280
+DEFAULT_END_TIME = 1000
 SEARCH_DURATION = 4
 TRIP_DURATION = 10
 DEPARTURE_INTERVAL = 5
@@ -43,13 +43,14 @@ def compute_delay(interval):
 def taxi_process(ident, trips, start_time=0):  # <1>
     """Yield to simulator issuing event at each state change"""
     time = yield Event(start_time, ident, 'leave garage')  # <2>
-    for i in range(trips):  # <3>
+    while True:  # <3>
         prowling_ends = time + compute_delay(SEARCH_DURATION)  # <4>
         time = yield Event(prowling_ends, ident, 'pick up passenger')  # <5>
 
         trip_ends = time + compute_delay(TRIP_DURATION)  # <6>
         time = yield Event(trip_ends, ident, 'drop off passenger')  # <7>
-
+        if time > 600:
+            break
     yield Event(time + 1, ident, 'going home')  # <8>
     # end of taxi process # <9>
 
@@ -93,7 +94,7 @@ class Simulator:
             print(msg.format(self.events.qsize()))
 
 
-def main(end_time=DEFAULT_END_TIME, num_taxis=DEFAULT_NUMBER_OF_TAXIS,
+def main(end_time=DEFAULT_END_TIME, num_taxis=2,
          seed=None):
     """Initialize random generator, build procs and run simulation"""
     if seed is not None:

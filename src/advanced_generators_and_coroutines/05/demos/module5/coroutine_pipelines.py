@@ -38,6 +38,7 @@ def get_data(coroutine, iterable):
         coroutine.send(iterable)
     except StopIteration as e:
         print(e.value)
+        return e.value
 
 
 get_data(filter_first_list(double_first_list(square_list())), [0,1,2,3])

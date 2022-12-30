@@ -13,16 +13,22 @@ def main():
     print(f"Doing math on {multiprocessing.cpu_count():,} processors.")
 
     processor_count = multiprocessing.cpu_count()
-    threads = []
+    # threads = []
+    pool = multiprocessing.Pool()
     for n in range(1, processor_count + 1):
-        threads.append(Thread(target=do_math,
-                              args=(30_000_000 * (n - 1) / processor_count,
-                                    30_000_000 * n / processor_count),
-                              daemon=True)
-                       )
+        # threads.append(Thread(target=do_math,
+        #                       args=(30_000_000 * (n - 1) / processor_count,
+        #                             30_000_000 * n / processor_count),
+        #                       daemon=True)
+        #                )
+        pool.apply_async(do_math, (30_000_0000 * (n - 1) / processor_count,
+                                   30_000_0000 * n / processor_count))
 
-    [t.start() for t in threads]
-    [t.join() for t in threads]
+    # [t.start() for t in threads]
+    # [t.join() for t in threads]
+
+    pool.close()
+    pool.join()
 
     dt = datetime.datetime.now() - t0
     print(f"Done in {dt.total_seconds():,.2f} sec.")

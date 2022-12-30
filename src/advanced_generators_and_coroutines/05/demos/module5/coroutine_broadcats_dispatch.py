@@ -102,4 +102,4 @@ def all_slow(workers):
 
 
 if __name__ == '__main__':
-    all_slow(5)
+    all_good(5)

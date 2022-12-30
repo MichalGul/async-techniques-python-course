@@ -118,4 +118,4 @@ def dispatch_workers(number_of_good=1, number_of_slow=0):
 
 
 if __name__ == '__main__':
-    dispatch_workers(2, 1)
+    dispatch_workers(3, 0)

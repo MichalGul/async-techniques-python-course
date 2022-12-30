@@ -23,9 +23,13 @@ def flatten(items, ignore_types=(str, bytes)):
         else:
             yield x
 
+
 for i in delegating_with_yield():
     print(i)
 
 print(list(chain('ABC', [1,2,3])))
 
 print(list(flatten(["D","u", ["p", ["a", "smierdzi"]], 'strasznie'])))
+
+for i in flatten(["D","u", ["p", ["a", "smierdzi"]], 'strasznie']):
+    print(i)

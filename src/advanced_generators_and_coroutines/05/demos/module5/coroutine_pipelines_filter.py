@@ -24,3 +24,4 @@ def coprint():
         print(f'-->{line}\n')
 
 
+iterate_file("test.txt", filter_by_pattern("python", coprint()))

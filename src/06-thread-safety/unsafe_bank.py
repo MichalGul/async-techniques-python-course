@@ -1,9 +1,8 @@
 import datetime
 import random
 import time
-from threading import Thread
+from threading import Thread, RLock
 from typing import List
-
 
 class Account:
     def __init__(self, balance=0):
@@ -54,18 +53,31 @@ def create_accounts() -> List[Account]:
         Account(balance=9000),
     ]
 
-
+transfer_lock = RLock()
 def do_transfer(from_account: Account, to_account: Account, amount: int):
     if from_account.balance < amount:
         return
 
-    from_account.balance -= amount
-    time.sleep(.000)
-    to_account.balance += amount
+    # puts program in temporary invalid state needs lock
+
+    # Not so good example
+    # transfer_lock.acquire() #block thread
+    # try:
+    #     from_account.balance -= amount # if something breaks and w will not relese, program will block forever
+    #     time.sleep(.000)
+    #     to_account.balance += amount
+    # finally:
+    #     transfer_lock.release() # exit lock
+
+    with transfer_lock: # better use context manager
+        from_account.balance -= amount # if something breaks and w will not relese, program will block forever
+        time.sleep(.000)
+        to_account.balance += amount
 
 
 def validate_bank(accounts: List[Account], total: int, quiet=False):
-    current = sum(a.balance for a in accounts)
+    with transfer_lock:
+        current = sum(a.balance for a in accounts)
     if current != total:
         print("ERROR: Inconsistent account balance: ${:,} vs ${:,}".format(
             current, total

@@ -42,11 +42,17 @@ def coprint(msg):
 
 @coroutine
 def broadcast(targets):
+    targets_ids = [0,1,2,3,4,0]
     for target in targets:
         next(target)  # Prime targets
     while True:
         item = yield
-        np.random.choice(np.array(targets)).send(item)
+        if item is not None:
+            id = np.random.choice(targets_ids)
+            targets[id].send(item)
+            targets_ids.remove(id)
+        else:
+            np.random.choice(np.array(targets)).send(item)
 
 
 def dispatch_work(int_list, subarrays_number, broadcaster):
@@ -124,4 +130,4 @@ def dispatch_workers(number_of_good=1, number_of_slow=0):
 
 
 if __name__ == '__main__':
-    dispatch_workers(2, 1)
+    dispatch_workers(3, 2)
