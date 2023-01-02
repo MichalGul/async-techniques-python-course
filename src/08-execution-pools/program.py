@@ -1,7 +1,7 @@
 import requests
 import bs4
 from concurrent.futures import Future
-# from concurrent.futures.thread import ThreadPoolExecutor as PoolExecutor
+#from concurrent.futures.thread import ThreadPoolExecutor as PoolExecutor
 from concurrent.futures.process import ProcessPoolExecutor as PoolExecutor
 
 
@@ -16,13 +16,13 @@ def main():
 
     work = []
 
-    with PoolExecutor() as executor:
+    with PoolExecutor() as executor: # Assign work
         for url in urls:
-            # print("Getting title from {}".format(url.replace('https', '')),
+            # print("Getting title from {}".format(url.replace('https', '')), sync version
             #       end='... ',
             #       flush=True)
             # title = get_title(url)
-            f: Future = executor.submit(get_title, url)
+            f: Future = executor.submit(get_title, url) # submit work
             work.append(f)
 
         print("Waiting for downloads...", flush=True)
